@@ -116,11 +116,11 @@ class RawFirBuilder(
     private val KtModifierListOwner.visibility: Visibility
         get() = with(modifierList) {
             when {
-                this == null -> Visibilities.UNKNOWN
-                hasModifier(PRIVATE_KEYWORD) -> Visibilities.PRIVATE
-                hasModifier(PUBLIC_KEYWORD) -> Visibilities.PUBLIC
-                hasModifier(PROTECTED_KEYWORD) -> Visibilities.PROTECTED
-                else -> if (hasModifier(INTERNAL_KEYWORD)) Visibilities.INTERNAL else Visibilities.UNKNOWN
+                this == null -> Visibilities.Unknown
+                hasModifier(PRIVATE_KEYWORD) -> Visibilities.Private
+                hasModifier(PUBLIC_KEYWORD) -> Visibilities.Public
+                hasModifier(PROTECTED_KEYWORD) -> Visibilities.Protected
+                else -> if (hasModifier(INTERNAL_KEYWORD)) Visibilities.Internal else Visibilities.Unknown
             }
         }
 
@@ -277,7 +277,7 @@ class RawFirBuilder(
             isGetter: Boolean,
         ): FirPropertyAccessor {
             val accessorVisibility =
-                if (this?.visibility != null && this.visibility != Visibilities.UNKNOWN) this.visibility else property.visibility
+                if (this?.visibility != null && this.visibility != Visibilities.Unknown) this.visibility else property.visibility
             // Downward propagation of `inline` and `external` modifiers (from property to its accessors)
             val status =
                 FirDeclarationStatusImpl(accessorVisibility, Modality.FINAL).apply {
@@ -499,7 +499,7 @@ class RawFirBuilder(
                             returnTypeRef = type
                             symbol = FirFieldSymbol(CallableId(name))
                             isVar = false
-                            status = FirDeclarationStatusImpl(Visibilities.LOCAL, Modality.FINAL)
+                            status = FirDeclarationStatusImpl(Visibilities.Local, Modality.FINAL)
                         }
                         initializeDelegateStatements.add(
                             buildVariableAssignment {
@@ -605,9 +605,9 @@ class RawFirBuilder(
 
             // See DescriptorUtils#getDefaultConstructorVisibility in core.descriptors
             fun defaultVisibility() = when {
-                owner is KtObjectDeclaration || owner.hasModifier(ENUM_KEYWORD) || owner is KtEnumEntry -> Visibilities.PRIVATE
-                owner.hasModifier(SEALED_KEYWORD) -> Visibilities.PRIVATE
-                else -> Visibilities.UNKNOWN
+                owner is KtObjectDeclaration || owner.hasModifier(ENUM_KEYWORD) || owner is KtEnumEntry -> Visibilities.Private
+                owner.hasModifier(SEALED_KEYWORD) -> Visibilities.Private
+                else -> Visibilities.Unknown
             }
 
             val explicitVisibility = this?.visibility
@@ -615,7 +615,7 @@ class RawFirBuilder(
                 isExpect = this@toFirConstructor?.hasExpectModifier() == true || owner.hasExpectModifier()
                 isActual = this@toFirConstructor?.hasActualModifier() == true
                 isInner = owner.hasModifier(INNER_KEYWORD)
-                isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.PRIVATE
+                isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.Private
                 isFromEnumClass = owner.hasModifier(ENUM_KEYWORD)
             }
             return buildPrimaryConstructor {
@@ -669,7 +669,7 @@ class RawFirBuilder(
                 origin = FirDeclarationOrigin.Source
                 returnTypeRef = delegatedEnumSelfTypeRef
                 name = nameAsSafeName
-                status = FirDeclarationStatusImpl(Visibilities.PUBLIC, Modality.FINAL).apply {
+                status = FirDeclarationStatusImpl(Visibilities.Public, Modality.FINAL).apply {
                     isStatic = true
                     isExpect = containingClassOrObject?.hasExpectModifier() == true
                 }
@@ -736,7 +736,7 @@ class RawFirBuilder(
                     else -> throw AssertionError("Unexpected class or object: ${classOrObject.text}")
                 }
                 val status = FirDeclarationStatusImpl(
-                    if (classOrObject.isLocal) Visibilities.LOCAL else classOrObject.visibility,
+                    if (classOrObject.isLocal) Visibilities.Local else classOrObject.visibility,
                     classOrObject.modality,
                 ).apply {
                     isExpect = classOrObject.hasExpectModifier()
@@ -916,7 +916,7 @@ class RawFirBuilder(
                     labelName = runIf(!name.isSpecial) { name.identifier }
                     symbol = FirNamedFunctionSymbol(callableIdForName(function.nameAsSafeName, function.isLocal))
                     status = FirDeclarationStatusImpl(
-                        if (function.isLocal) Visibilities.LOCAL else function.visibility,
+                        if (function.isLocal) Visibilities.Local else function.visibility,
                         function.modality,
                     ).apply {
                         isExpect = function.hasExpectModifier() || function.containingClassOrObject?.hasExpectModifier() == true
@@ -1075,7 +1075,7 @@ class RawFirBuilder(
                     isExpect = hasExpectModifier() || owner.hasExpectModifier()
                     isActual = hasActualModifier()
                     isInner = owner.hasModifier(INNER_KEYWORD)
-                    isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.PRIVATE
+                    isFromSealedClass = owner.hasModifier(SEALED_KEYWORD) && explicitVisibility !== Visibilities.Private
                     isFromEnumClass = owner.hasModifier(ENUM_KEYWORD)
                 }
                 symbol = FirConstructorSymbol(callableIdForClassConstructor())
@@ -1149,7 +1149,7 @@ class RawFirBuilder(
                         }
                     }
 
-                    status = FirDeclarationStatusImpl(Visibilities.LOCAL, Modality.FINAL).apply {
+                    status = FirDeclarationStatusImpl(Visibilities.Local, Modality.FINAL).apply {
                         isLateInit = hasModifier(LATEINIT_KEYWORD)
                     }
 
@@ -1451,7 +1451,7 @@ class RawFirBuilder(
                         isVar = false
                         symbol = FirPropertySymbol(name)
                         isLocal = true
-                        status = FirDeclarationStatusImpl(Visibilities.LOCAL, Modality.FINAL)
+                        status = FirDeclarationStatusImpl(Visibilities.Local, Modality.FINAL)
                     }
                 }
                 else -> null
