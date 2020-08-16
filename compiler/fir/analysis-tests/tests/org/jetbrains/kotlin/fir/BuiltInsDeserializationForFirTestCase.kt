@@ -6,7 +6,7 @@
 package org.jetbrains.kotlin.fir
 
 import com.intellij.psi.search.GlobalSearchScope
-import org.jetbrains.kotlin.builtins.KotlinBuiltIns
+import org.jetbrains.kotlin.builtins.KotlinBuiltInsNames
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.jetbrains.kotlin.fir.resolve.firSymbolProvider
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
@@ -24,9 +24,9 @@ class BuiltInsDeserializationForFirTestCase : AbstractFirResolveWithSessionTestC
 
     fun testBuiltInPackagesContent() {
         for (packageFqName in listOf(
-            KotlinBuiltIns.BUILT_INS_PACKAGE_FQ_NAME,
-            KotlinBuiltIns.COLLECTIONS_PACKAGE_FQ_NAME,
-            KotlinBuiltIns.RANGES_PACKAGE_FQ_NAME
+            KotlinBuiltInsNames.BUILT_INS_PACKAGE_FQ_NAME,
+            KotlinBuiltInsNames.COLLECTIONS_PACKAGE_FQ_NAME,
+            KotlinBuiltInsNames.RANGES_PACKAGE_FQ_NAME
         )) {
             checkPackageContent(packageFqName)
         }
