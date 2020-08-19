@@ -48,7 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static org.jetbrains.kotlin.builtins.KotlinBuiltInsNames.*;
+import static org.jetbrains.kotlin.builtins.StandardNames.*;
 
 public class LoadBuiltinsTest extends KotlinTestWithEnvironment {
     @Override
